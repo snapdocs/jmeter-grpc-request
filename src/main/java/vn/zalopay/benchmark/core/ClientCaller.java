@@ -3,10 +3,13 @@ package vn.zalopay.benchmark.core;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HostAndPort;
 import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.DynamicMessage;
+import com.google.protobuf.Message;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.util.JsonFormat;
 import io.grpc.CallOptions;
 import io.grpc.ManagedChannel;
@@ -23,6 +26,7 @@ import vn.zalopay.benchmark.core.specification.GrpcResponse;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ClientCaller {
@@ -110,8 +114,13 @@ public class ClientCaller {
     }
 
     public String buildRequest(String jsonData) {
+            return buildRequest(jsonData, ImmutableMap.of());
+    }
+
+    public String buildRequest(String jsonData, Map<String, BytesFieldContents> bytesFields) {
         try {
             requestMessages = Reader.create(methodDescriptor.getInputType(), jsonData, registry).read();
+            requestMessages = setBytesFields(requestMessages, bytesFields);
             return JsonFormat.printer().includingDefaultValueFields().print(requestMessages.get(0));
         } catch (Exception e) {
             shutdownNettyChannel();
@@ -196,5 +205,25 @@ public class ClientCaller {
         } catch (Exception e) {
             throw new RuntimeException("Caught exception while parsing deadline to long", e);
         }
+    }
+
+    private static ImmutableList<DynamicMessage> setBytesFields(ImmutableList<DynamicMessage> requestMessages, Map<String, BytesFieldContents> bytesFields) {
+        DynamicMessage.Builder builder = requestMessages.get(0).toBuilder();
+        for (Map.Entry<String, BytesFieldContents> entry : bytesFields.entrySet()) {
+                String field = entry.getKey();
+                BytesFieldContents contents = entry.getValue();
+                String[] pathParts = field.split(".");
+                Message.Builder b = builder;
+                FieldDescriptor fd = b.getDescriptorForType().findFieldByName(pathParts[0]);
+                for (int i = 1; i < pathParts.length; i++) {
+                        b = b.getFieldBuilder(fd);
+                        fd = builder.getDescriptorForType().findFieldByName(pathParts[i]);
+                }
+                if (fd.getType() != FieldDescriptor.Type.BYTES) {
+                        throw new IllegalArgumentException("Bytes field is not a bytes field");
+                }
+                b.setField(fd, contents.readBytes());
+        }
+        return ImmutableList.of(builder.build());
     }
 }

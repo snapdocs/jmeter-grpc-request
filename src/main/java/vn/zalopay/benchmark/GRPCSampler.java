@@ -7,9 +7,14 @@ import org.apache.jmeter.testelement.ThreadListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vn.zalopay.benchmark.core.ClientCaller;
+import vn.zalopay.benchmark.core.BytesFieldContents;
 import vn.zalopay.benchmark.core.specification.GrpcResponse;
+import org.apache.jmeter.testelement.property.CollectionProperty;
+import vn.zalopay.benchmark.util.GRPCBinaryFields;
+import vn.zalopay.benchmark.util.GRPCBinaryField;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 public class GRPCSampler extends AbstractSampler implements ThreadListener {
 
@@ -23,6 +28,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     public static final String PORT = "GRPCSampler.port";
     public static final String FULL_METHOD = "GRPCSampler.fullMethod";
     public static final String REQUEST_JSON = "GRPCSampler.requestJson";
+    public static final String BINARY_FIELDS = "GRPCSampler.binaryFields";
     public static final String DEADLINE = "GRPCSampler.deadline";
     public static final String TLS = "GRPCSampler.tls";
     public static final String TLS_DISABLE_VERIFICATION = "GRPCSampler.tlsDisableVerification";
@@ -65,7 +71,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
         try {
             initGrpcClient();
             sampleResult.setSampleLabel(getName());
-            String grpcRequest = clientCaller.buildRequest(getRequestJson());
+            String grpcRequest = clientCaller.buildRequest(getRequestJson(), getBytesFieldsAsMap());
             sampleResult.setSamplerData(grpcRequest);
             sampleResult.sampleStart();
             grpcResponse = clientCaller.call(getDeadline());
@@ -159,6 +165,28 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
 
     public void setRequestJson(String requestJson) {
         setProperty(REQUEST_JSON, requestJson);
+    }
+
+    public GRPCBinaryFields getBytesFields() {
+        return (GRPCBinaryFields) getProperty(BINARY_FIELDS);
+    }
+
+    public HashMap<String, BytesFieldContents> getBytesFieldsAsMap() {
+        GRPCBinaryFields fields = getBytesFields();
+        HashMap<String, BytesFieldContents> contents = new HashMap<>();
+        CollectionProperty binaryFields = fields.getGRPCBinaryFieldsCollection();
+        for (int i = 0; i < binaryFields.size(); i++) {
+            GRPCBinaryField field = (GRPCBinaryField) binaryFields.get(i);
+            contents.put(field.getFieldPath(), new
+                            BytesFieldContents(field.getFilePath(),
+                                    field.getOffset(), field.getReadLength()));
+        }
+        return contents;
+    }
+
+    public void setBytesFields(GRPCBinaryFields binaryFields) {
+        addProperty(binaryFields.getGRPCBinaryFieldsCollection());
+        // setProperty(BINARY_FIELDS, binaryFields);
     }
 
     public String getDeadline() {

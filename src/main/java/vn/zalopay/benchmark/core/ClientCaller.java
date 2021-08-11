@@ -220,7 +220,7 @@ public class ClientCaller {
                         fd = builder.getDescriptorForType().findFieldByName(pathParts[i]);
                 }
                 if (fd.getType() != FieldDescriptor.Type.BYTES) {
-                        throw new IllegalArgumentException("Bytes field is not a bytes field");
+                        throw new RuntimeException("some text here", new IllegalArgumentException("Bytes field is not a bytes field"));
                 }
                 b.setField(fd, contents.readBytes());
         }

@@ -16,6 +16,8 @@ import vn.zalopay.benchmark.util.GRPCBinaryField;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import com.google.common.collect.ImmutableMap;
+
 public class GRPCSampler extends AbstractSampler implements ThreadListener {
 
     private static final Logger log = LoggerFactory.getLogger(GRPCSampler.class);
@@ -117,8 +119,12 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     private void errorResult(GrpcResponse grpcResponse, SampleResult sampleResult, Exception e) {
         sampleResult.sampleEnd();
         sampleResult.setSuccessful(false);
-        sampleResult.setResponseData(String.format("Exception: %s. %s", e.getCause().getMessage(), grpcResponse.getGrpcMessageString()), "UTF-8");
-        sampleResult.setResponseMessage("Exception: " + e.getCause().getMessage());
+        Throwable t = e;
+        if (e.getCause() != null) {
+            t = e.getCause();
+        }
+        sampleResult.setResponseData(String.format("Exception: %s. %s", t.getMessage(), grpcResponse.getGrpcMessageString()), "UTF-8");
+        sampleResult.setResponseMessage("Exception: " + t.getMessage());
         sampleResult.setDataType(SampleResult.TEXT);
         sampleResult.setResponseCode("500");
     }
@@ -168,12 +174,15 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     }
 
     public GRPCBinaryFields getBytesFields() {
-        return (GRPCBinaryFields) getProperty(BINARY_FIELDS);
+        return (GRPCBinaryFields) getProperty(BINARY_FIELDS).getObjectValue();
     }
 
     public HashMap<String, BytesFieldContents> getBytesFieldsAsMap() {
         GRPCBinaryFields fields = getBytesFields();
         HashMap<String, BytesFieldContents> contents = new HashMap<>();
+        if(fields == null) {
+            return contents;
+        }
         CollectionProperty binaryFields = fields.getGRPCBinaryFieldsCollection();
         for (int i = 0; i < binaryFields.size(); i++) {
             GRPCBinaryField field = (GRPCBinaryField) binaryFields.get(i);

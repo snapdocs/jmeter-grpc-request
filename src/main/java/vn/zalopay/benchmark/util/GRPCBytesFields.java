@@ -1,24 +1,14 @@
 package vn.zalopay.benchmark.util;
 
-import org.apache.jmeter.samplers.AbstractSampler;
-import org.apache.jmeter.samplers.Entry;
-import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jmeter.testelement.ThreadListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import vn.zalopay.benchmark.core.ClientCaller;
-import vn.zalopay.benchmark.core.specification.GrpcResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jmeter.testelement.property.TestElementProperty;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.Serializable;
 
-public class GRPCBinaryFields extends ConfigTestElement implements Serializable {
+public class GRPCBytesFields extends ConfigTestElement {
     // TODO!
     private static final long serialVersionUID = 241L;
 
@@ -28,8 +18,8 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
     /**
      * Create a new GRPCBinaryFields object with no files.
      */
-    public GRPCBinaryFields() {
-        setProperty(new CollectionProperty(BINARY_FIELDS_ARGS, new ArrayList<GRPCBinaryField>()));
+    public GRPCBytesFields() {
+        setProperty(new CollectionProperty(BINARY_FIELDS_ARGS, new ArrayList<GRPCBytesField>()));
     }
 
     /**
@@ -47,7 +37,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
     @Override
     public void clear() {
         super.clear();
-        setProperty(new CollectionProperty(BINARY_FIELDS_ARGS, new ArrayList<GRPCBinaryField>()));
+        setProperty(new CollectionProperty(BINARY_FIELDS_ARGS, new ArrayList<GRPCBytesField>()));
     }
 
     /**
@@ -55,7 +45,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      *
      * @param fields the new fields
      */
-    public void setGRPCBinaryFields(List<GRPCBinaryField> fields) {
+    public void setGRPCBinaryFields(List<GRPCBytesField> fields) {
         setProperty(new CollectionProperty(BINARY_FIELDS_ARGS, fields));
     }
 
@@ -66,7 +56,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      * @param filePath the path of the file to set in the field
      */
     public void addGRPCBinaryField(String fieldPath, String filePath) {
-        addGRPCBinaryField(new GRPCBinaryField(fieldPath, filePath));
+        addGRPCBinaryField(new GRPCBytesField(fieldPath, filePath));
     }
 
     /**
@@ -75,7 +65,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      * @param field
      *  the new field
      */
-    public void addGRPCBinaryField(GRPCBinaryField field) {
+    public void addGRPCBinaryField(GRPCBytesField field) {
         TestElementProperty newGRPCBinaryField = new TestElementProperty(field.getFieldPath(), field);
         if (isRunningVersion()) {
             this.setTemporary(newGRPCBinaryField);
@@ -92,7 +82,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      * @param readLength length of bytes to read from file
      */
     public void addGRPCBinaryField(String fieldPath, String filePath, long offset, long readLength) {
-        addGRPCBinaryField(new GRPCBinaryField(fieldPath, filePath, offset, readLength));
+        addGRPCBinaryField(new GRPCBytesField(fieldPath, filePath, offset, readLength));
     }
 
     /**
@@ -109,12 +99,12 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      *
      * @return an array of file arguments
      */
-    public GRPCBinaryField[] asArray(){
+    public GRPCBytesField[] asArray(){
         CollectionProperty props = getGRPCBinaryFieldsCollection();
         final int size = props.size();
-        GRPCBinaryField[] args = new GRPCBinaryField[size];
+        GRPCBytesField[] args = new GRPCBytesField[size];
         for(int i=0; i<size; i++){
-            args[i]=(GRPCBinaryField) props.get(i).getObjectValue();
+            args[i]=(GRPCBytesField) props.get(i).getObjectValue();
         }
         return args;
     }
@@ -129,7 +119,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
         StringBuilder str = new StringBuilder();
         PropertyIterator iter = getGRPCBinaryFieldsCollection().iterator();
         while (iter.hasNext()) {
-            GRPCBinaryField file = (GRPCBinaryField) iter.next().getObjectValue();
+            GRPCBytesField file = (GRPCBytesField) iter.next().getObjectValue();
             str.append(file.toString());
             if (iter.hasNext()) {
                 str.append("\n");
@@ -154,10 +144,10 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      *
      * @param file the file to remove
      */
-    public void removeGRPCBinaryField(GRPCBinaryField file) {
+    public void removeGRPCBinaryField(GRPCBytesField file) {
         PropertyIterator iter = getGRPCBinaryFieldsCollection().iterator();
         while (iter.hasNext()) {
-            GRPCBinaryField item = (GRPCBinaryField) iter.next().getObjectValue();
+            GRPCBytesField item = (GRPCBytesField) iter.next().getObjectValue();
             if (file.equals(item)) {
                 iter.remove();
             }
@@ -173,7 +163,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
     public void removeGRPCBinaryField(String fieldPath) {
         PropertyIterator iter = getGRPCBinaryFieldsCollection().iterator();
         while (iter.hasNext()) {
-            GRPCBinaryField file = (GRPCBinaryField) iter.next().getObjectValue();
+            GRPCBytesField file = (GRPCBytesField) iter.next().getObjectValue();
             if (file.getFieldPath().equals(fieldPath)) {
                 iter.remove();
             }
@@ -192,7 +182,7 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      * empty string as its path.
      */
     public void addEmptyGRPCBinaryField() {
-        addGRPCBinaryField(new GRPCBinaryField("", ""));
+        addGRPCBinaryField(new GRPCBytesField("", ""));
     }
 
     /**
@@ -212,10 +202,10 @@ public class GRPCBinaryFields extends ConfigTestElement implements Serializable 
      * @return the file at the specified index, or null if no file
      *  exists at that index.
      */
-    public GRPCBinaryField getGRPCBinaryField(int row) {
-        GRPCBinaryField file = null;
+    public GRPCBytesField getGRPCBinaryField(int row) {
+        GRPCBytesField file = null;
         if (row < getGRPCBinaryFieldCount()) {
-            file = (GRPCBinaryField) getGRPCBinaryFieldsCollection().get(row).getObjectValue();
+            file = (GRPCBytesField) getGRPCBinaryFieldsCollection().get(row).getObjectValue();
         }
         return file;
     }

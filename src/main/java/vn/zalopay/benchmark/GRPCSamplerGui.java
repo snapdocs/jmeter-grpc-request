@@ -46,6 +46,7 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
     private JCheckBox isTLSDisableVerificationCheckBox;
 
     private JSyntaxTextArea requestJsonArea;
+    private GRPCBytesFieldsPanel byteFieldsPanel;
 
     public GRPCSamplerGui() {
         super();
@@ -86,6 +87,7 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
         sampler.setTls(this.isTLSCheckBox.isSelected());
         sampler.setTlsDisableVerification(this.isTLSDisableVerificationCheckBox.isSelected());
         sampler.setRequestJson(this.requestJsonArea.getText());
+        byteFieldsPanel.modifyTestElement(element);
     }
 
     @Override
@@ -104,6 +106,7 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
         isTLSCheckBox.setSelected(sampler.isTls());
         isTLSDisableVerificationCheckBox.setSelected(sampler.isTlsDisableVerification());
         requestJsonArea.setText(sampler.getRequestJson());
+        byteFieldsPanel.configure(element);
     }
 
     @Override
@@ -123,6 +126,7 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
         isTLSCheckBox.setSelected(false);
         isTLSDisableVerificationCheckBox.setSelected(false);
         requestJsonArea.setText("");
+        byteFieldsPanel.clear();
     }
 
     private void initGui() {
@@ -141,6 +145,8 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
         mainPanel.add(getGRPCRequestPanel());
         mainPanel.add(getOptionConfigPanel());
         mainPanel.add(getRequestJSONPanel());
+        byteFieldsPanel = new GRPCBytesFieldsPanel();
+        mainPanel.add(byteFieldsPanel);
         add(mainPanel, BorderLayout.CENTER);
     }
 

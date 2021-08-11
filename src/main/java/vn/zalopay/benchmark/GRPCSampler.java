@@ -1,22 +1,21 @@
 package vn.zalopay.benchmark;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+
 import org.apache.jmeter.samplers.AbstractSampler;
 import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.ThreadListener;
+import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vn.zalopay.benchmark.core.ClientCaller;
+
 import vn.zalopay.benchmark.core.BytesFieldContents;
+import vn.zalopay.benchmark.core.ClientCaller;
 import vn.zalopay.benchmark.core.specification.GrpcResponse;
-import org.apache.jmeter.testelement.property.CollectionProperty;
-import vn.zalopay.benchmark.util.GRPCBinaryFields;
-import vn.zalopay.benchmark.util.GRPCBinaryField;
-
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-
-import com.google.common.collect.ImmutableMap;
+import vn.zalopay.benchmark.util.GRPCBytesField;
+import vn.zalopay.benchmark.util.GRPCBytesFields;
 
 public class GRPCSampler extends AbstractSampler implements ThreadListener {
 
@@ -173,19 +172,20 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
         setProperty(REQUEST_JSON, requestJson);
     }
 
-    public GRPCBinaryFields getBytesFields() {
-        return (GRPCBinaryFields) getProperty(BINARY_FIELDS).getObjectValue();
+    public GRPCBytesFields getBytesFields() {
+        GRPCBytesFields field = (GRPCBytesFields) getProperty(BINARY_FIELDS).getObjectValue();
+        if(field == null) {
+            return new GRPCBytesFields();
+        }
+        return field;
     }
 
     public HashMap<String, BytesFieldContents> getBytesFieldsAsMap() {
-        GRPCBinaryFields fields = getBytesFields();
+        GRPCBytesFields fields = getBytesFields();
         HashMap<String, BytesFieldContents> contents = new HashMap<>();
-        if(fields == null) {
-            return contents;
-        }
         CollectionProperty binaryFields = fields.getGRPCBinaryFieldsCollection();
         for (int i = 0; i < binaryFields.size(); i++) {
-            GRPCBinaryField field = (GRPCBinaryField) binaryFields.get(i);
+            GRPCBytesField field = (GRPCBytesField) binaryFields.get(i);
             contents.put(field.getFieldPath(), new
                             BytesFieldContents(field.getFilePath(),
                                     field.getOffset(), field.getReadLength()));
@@ -193,7 +193,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
         return contents;
     }
 
-    public void setBytesFields(GRPCBinaryFields binaryFields) {
+    public void setBytesFields(GRPCBytesFields binaryFields) {
         addProperty(binaryFields.getGRPCBinaryFieldsCollection());
         // setProperty(BINARY_FIELDS, binaryFields);
     }

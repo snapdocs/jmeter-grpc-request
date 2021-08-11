@@ -1,18 +1,9 @@
 package vn.zalopay.benchmark.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.property.JMeterProperty;
-import org.apache.jmeter.testelement.property.StringProperty;
 import org.apache.jmeter.testelement.property.LongProperty;
-import org.apache.tika.Tika;
-import org.apache.tika.config.TikaConfig;
-import org.apache.tika.exception.TikaException;
-import org.xml.sax.SAXException;
+import org.apache.jmeter.testelement.property.StringProperty;
 
 /**
  * Class representing a file parameter for http upload.
@@ -21,7 +12,7 @@ import org.xml.sax.SAXException;
  * Also provides temporary storage for the headers which are sent with files.
  *
  */
-public class GRPCBinaryField extends AbstractTestElement implements Serializable {
+public class GRPCBytesField extends AbstractTestElement {
 
     private static final long serialVersionUID = 241L;
 
@@ -40,7 +31,7 @@ public class GRPCBinaryField extends AbstractTestElement implements Serializable
     /**
      * Constructor for an empty GRPCBinaryField object
      */
-    public GRPCBinaryField() {
+    public GRPCBytesField() {
     }
 
     /**
@@ -50,7 +41,7 @@ public class GRPCBinaryField extends AbstractTestElement implements Serializable
      * @param filePath path to the file to use
      * @throws IllegalArgumentException if <code>path</code> is <code>null</code>
      */
-    public GRPCBinaryField(String fieldPath, String filePath) {
+    public GRPCBytesField(String fieldPath, String filePath) {
         this(fieldPath, filePath, 0, 0);
     }
 
@@ -68,7 +59,7 @@ public class GRPCBinaryField extends AbstractTestElement implements Serializable
      * @throws IllegalArgumentException
      *             if any parameter is <code>null</code>
      */
-    public GRPCBinaryField(String fieldPath, String filePath, long offset, long readLength) {
+    public GRPCBytesField(String fieldPath, String filePath, long offset, long readLength) {
         if (fieldPath == null || filePath == null) {
             throw new IllegalArgumentException("Parameters must not be null");
         }
@@ -93,7 +84,7 @@ public class GRPCBinaryField extends AbstractTestElement implements Serializable
      * @throws IllegalArgumentException
      *             if any parameter is <code>null</code>
      */
-    public GRPCBinaryField(JMeterProperty fieldPath, JMeterProperty filePath, JMeterProperty offset, JMeterProperty readLength) {
+    public GRPCBytesField(JMeterProperty fieldPath, JMeterProperty filePath, JMeterProperty offset, JMeterProperty readLength) {
         if (fieldPath == null || filePath == null || offset == null || readLength == null) {
             throw new IllegalArgumentException("Parameters must not be null");
         }
@@ -113,12 +104,12 @@ public class GRPCBinaryField extends AbstractTestElement implements Serializable
      * Copy Constructor.
      *
      * @param file
-     *            {@link GRPCBinaryField} to get information about the path, http
+     *            {@link GRPCBytesField} to get information about the path, http
      *            parameter name and mimetype of the file
      * @throws IllegalArgumentException
      *             if any of those retrieved information is <code>null</code>
      */
-    public GRPCBinaryField(GRPCBinaryField field) {
+    public GRPCBytesField(GRPCBytesField field) {
         this(field.getFieldPath(), field.getFilePath(), field.getOffset(), field.getReadLength());
     }
 

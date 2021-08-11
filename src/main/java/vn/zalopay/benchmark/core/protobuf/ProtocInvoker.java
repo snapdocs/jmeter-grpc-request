@@ -89,7 +89,7 @@ public class ProtocInvoker {
      */
     public FileDescriptorSet invoke() throws ProtocInvocationException {
         Path wellKnownTypesInclude;
-        Path googleTypesInclude;
+        //Path googleTypesInclude; variable not used?
         try {
             wellKnownTypesInclude = setupWellKnownTypes();
         } catch (IOException e) {

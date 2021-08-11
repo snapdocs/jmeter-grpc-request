@@ -25,6 +25,7 @@ public class BytesFieldContents {
                 return readLength;
         }
 
+        // TODO - read file
         public ByteString readBytes() {
                 return ByteString.EMPTY;
         }

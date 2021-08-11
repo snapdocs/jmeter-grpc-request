@@ -1,16 +1,20 @@
 package vn.zalopay.benchmark.core.sampler;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.lang.reflect.Field;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+
 import org.apache.jmeter.sampler.DebugSampler;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import vn.zalopay.benchmark.GRPCSampler;
 import vn.zalopay.benchmark.GRPCSamplerGui;
 import vn.zalopay.benchmark.core.BaseTest;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.lang.reflect.Field;
 
 
 public class GRPCSamplerGuiTest extends BaseTest {
@@ -169,7 +173,7 @@ public class GRPCSamplerGuiTest extends BaseTest {
         fullMethodField.setAccessible(true);
         fullMethodButtonField.setAccessible(true);
         JButton fullMethodButton = (JButton) fullMethodButtonField.get(grpRequestPluginGUI);
-        JComboBox<String> fullMethodComboBox = (JComboBox<String>) fullMethodField.get(grpRequestPluginGUI);
+        JComboBox<String> fullMethodComboBox = (JComboBox<String>) fullMethodField.get(grpRequestPluginGUI); // warning: Type safety: Unchecked cast from Object to JComboBox<String>
         JFrame frame = new JFrame("Test");
         frame.setPreferredSize(new Dimension(1024, 768));
         frame.getContentPane().add(grpRequestPluginGUI, BorderLayout.CENTER);

@@ -1,15 +1,7 @@
 package vn.zalopay.benchmark.core.client;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import org.apache.commons.io.FileUtils;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import vn.zalopay.benchmark.core.BaseTest;
-import vn.zalopay.benchmark.core.ClientList;
+import static org.mockito.ArgumentMatchers.any;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileSystems;
@@ -17,7 +9,15 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.any;
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import vn.zalopay.benchmark.core.BaseTest;
+import vn.zalopay.benchmark.core.ClientList;
 
 public class ClientListTest extends BaseTest {
 

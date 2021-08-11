@@ -109,11 +109,11 @@ public class GrpcSamplerTest extends BaseTest {
 
     @Test
     public void testCanSendSampleRequestWithErrorNullResponse() {
-        MockedStatic<Writer> writerSatic = Mockito.mockStatic(Writer.class);
+        MockedStatic<Writer> writerSatic = Mockito.mockStatic(Writer.class); // may cause issues when running tests: Writer is a raw type. References to generic type Writer<T> should be parameterized
         ClientCaller clientCaller = Mockito.mock(ClientCaller.class);
-        Writer writer = Mockito.mock(Writer.class);
+        Writer writer = Mockito.mock(Writer.class); // and here
         Mockito.doNothing().when(writer).onError(Mockito.any(Throwable.class));
-        Mockito.doNothing().when(writer).onNext(Mockito.any(com.google.protobuf.Message.class));
+        Mockito.doNothing().when(writer).onNext(Mockito.any(com.google.protobuf.Message.class)); // and here
         Mockito.when(clientCaller.call("500")).thenThrow(new RuntimeException("Dummy Exception"));
         writerSatic.when(() -> Writer.create(Mockito.any(GrpcResponse.class), Mockito.any(JsonFormat.TypeRegistry.class))).thenAnswer((i) -> writer);
         HostAndPort hostAndPort = HostAndPort.fromString(HOST_PORT);

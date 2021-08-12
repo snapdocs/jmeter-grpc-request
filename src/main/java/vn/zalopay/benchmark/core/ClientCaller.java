@@ -1,5 +1,9 @@
 package vn.zalopay.benchmark.core;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -7,10 +11,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HostAndPort;
 import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.Descriptors;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.Message;
-import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.util.JsonFormat;
+
 import io.grpc.CallOptions;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
@@ -23,11 +28,6 @@ import vn.zalopay.benchmark.core.protobuf.ProtoMethodName;
 import vn.zalopay.benchmark.core.protobuf.ProtocInvoker;
 import vn.zalopay.benchmark.core.protobuf.ServiceResolver;
 import vn.zalopay.benchmark.core.specification.GrpcResponse;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ClientCaller {
     private Descriptors.MethodDescriptor methodDescriptor;

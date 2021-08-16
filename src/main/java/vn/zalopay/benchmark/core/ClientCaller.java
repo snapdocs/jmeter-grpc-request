@@ -1,5 +1,6 @@
 package vn.zalopay.benchmark.core;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -222,7 +223,12 @@ public class ClientCaller {
                 if (fd.getType() != FieldDescriptor.Type.BYTES) {
                         throw new RuntimeException("some text here", new IllegalArgumentException("Bytes field is not a bytes field"));
                 }
-                b.setField(fd, contents.readBytes());
+                try {
+                    b.setField(fd, contents.readBytes());
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
         }
         return ImmutableList.of(builder.build());
     }

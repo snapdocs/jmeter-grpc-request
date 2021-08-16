@@ -59,7 +59,7 @@ public class GRPCBytesField extends AbstractTestElement {
      * @throws IllegalArgumentException
      *             if any parameter is <code>null</code>
      */
-    public GRPCBytesField(String fieldPath, String filePath, long offset, long readLength) {
+    public GRPCBytesField(String fieldPath, String filePath, long offset, int readLength) {
         if (fieldPath == null || filePath == null) {
             throw new IllegalArgumentException("Parameters must not be null");
         }
@@ -174,7 +174,7 @@ public class GRPCBytesField extends AbstractTestElement {
      * @param newPath
      *  the new path
      */
-    public void setReadLength(long newReadLength) {
+    public void setReadLength(int newReadLength) {
         setProperty(new LongProperty(READ_LENGTH, newReadLength));
     }
 
@@ -183,8 +183,8 @@ public class GRPCBytesField extends AbstractTestElement {
      *
      * @return the file's path
      */
-    public long getReadLength() {
-        return getPropertyAsLong(READ_LENGTH);
+    public int getReadLength() {
+        return getPropertyAsInt(READ_LENGTH);
     }
 
     /**

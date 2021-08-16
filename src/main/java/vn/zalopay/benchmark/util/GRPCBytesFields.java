@@ -81,7 +81,7 @@ public class GRPCBytesFields extends ConfigTestElement {
      * @param offset byte offset to begin reading file
      * @param readLength length of bytes to read from file
      */
-    public void addGRPCBinaryField(String fieldPath, String filePath, long offset, long readLength) {
+    public void addGRPCBinaryField(String fieldPath, String filePath, long offset, int readLength) {
         addGRPCBinaryField(new GRPCBytesField(fieldPath, filePath, offset, readLength));
     }
 

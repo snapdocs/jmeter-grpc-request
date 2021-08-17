@@ -8,6 +8,7 @@ import org.apache.jmeter.samplers.Entry;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.testelement.property.CollectionProperty;
+import org.apache.jmeter.testelement.property.TestElementProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
             sampleResult.setResponseCodeOK();
         } catch (RuntimeException e) {
             errorResult(grpcResponse, sampleResult, e);
+            e.printStackTrace();
         }
         return sampleResult;
     }
@@ -116,7 +118,9 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     }
 
     private void errorResult(GrpcResponse grpcResponse, SampleResult sampleResult, Exception e) {
-        sampleResult.sampleEnd();
+        if(sampleResult.getStartTime() != 0) {
+            sampleResult.sampleEnd();
+        }
         sampleResult.setSuccessful(false);
         Throwable t = e;
         if (e.getCause() != null) {
@@ -185,7 +189,7 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
         HashMap<String, BytesFieldContents> contents = new HashMap<>();
         CollectionProperty binaryFields = fields.getGRPCBinaryFieldsCollection();
         for (int i = 0; i < binaryFields.size(); i++) {
-            GRPCBytesField field = (GRPCBytesField) binaryFields.get(i);
+            GRPCBytesField field = (GRPCBytesField) binaryFields.get(i).getObjectValue();
             contents.put(field.getFieldPath(), new
                             BytesFieldContents(field.getFilePath(),
                                     field.getOffset(), field.getReadLength()));
@@ -194,8 +198,11 @@ public class GRPCSampler extends AbstractSampler implements ThreadListener {
     }
 
     public void setBytesFields(GRPCBytesFields binaryFields) {
-        addProperty(binaryFields.getGRPCBinaryFieldsCollection());
-        // setProperty(BINARY_FIELDS, binaryFields);
+        if (binaryFields.getGRPCBinaryFieldCount() > 0) {
+            setProperty(new TestElementProperty(BINARY_FIELDS, binaryFields));
+        } else {
+            removeProperty(BINARY_FIELDS); // no point saving an empty list
+        }
     }
 
     public String getDeadline() {

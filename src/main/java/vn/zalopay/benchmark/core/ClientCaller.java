@@ -213,7 +213,8 @@ public class ClientCaller {
         for (Map.Entry<String, BytesFieldContents> entry : bytesFields.entrySet()) {
                 String field = entry.getKey();
                 BytesFieldContents contents = entry.getValue();
-                String[] pathParts = field.split(".");
+                System.out.println(field);
+                String[] pathParts = field.split("\\.");
                 Message.Builder b = builder;
                 FieldDescriptor fd = b.getDescriptorForType().findFieldByName(pathParts[0]);
                 for (int i = 1; i < pathParts.length; i++) {
@@ -223,12 +224,7 @@ public class ClientCaller {
                 if (fd.getType() != FieldDescriptor.Type.BYTES) {
                         throw new RuntimeException("some text here", new IllegalArgumentException("Bytes field is not a bytes field"));
                 }
-                try {
-                    b.setField(fd, contents.readBytes());
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                b.setField(fd, contents.readBytes());
         }
         return ImmutableList.of(builder.build());
     }

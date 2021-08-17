@@ -29,7 +29,7 @@ public class BytesFieldContents {
                 return readLength;
         }
 
-        public ByteString readBytes() throws IOException {
+        public ByteString readBytes() {
                 // allocate array of correct length
                 byte[] bytes = new byte[readLength];
                 int bytesRead = 0;
@@ -40,6 +40,8 @@ public class BytesFieldContents {
                         while (bytesRead < bytesWanted) {
                                 bytesRead += file.read (bytes, bytesRead, bytesWanted - bytesRead);
                         }
+                } catch (IOException e) {
+                        throw new RuntimeException("Caught exception while reading file", e);
                 }
 
                 return ByteString.copyFrom(bytes);

@@ -145,7 +145,7 @@ public class GRPCBytesFieldsPanel extends JPanel implements ActionListener {
                 new Functor("setFilePath"), //$NON-NLS-1$
                 new Functor("setOffset"), //$NON-NLS-1$
                 new Functor("setReadLength")}, //$NON-NLS-1$
-            new Class[] {String.class, String.class, Long.class, Long.class});
+            new Class[] {String.class, String.class, Long.class, Integer.class});
     }
 
     public static boolean testFunctors(){

@@ -101,10 +101,10 @@ public class GRPCBytesFieldsPanel extends JPanel implements ActionListener {
     /** Command for moving a row down in the table. */
     private static final String DOWN = "down"; // $NON-NLS-1$
 
-    private static final String FIELDPATH = "send_field_field_name_label"; // $NON-NLS-1$
-    private static final String FILEPATH = "send_field_file_name_label"; // $NON-NLS-1$
-    private static final String OFFSET = "send_field_offset_label"; //$NON-NLS-1$
-    private static final String READLENGTH = "send_field_read_length_label"; //$NON-NLS-1$
+    private static final String FIELDPATH = "Field path"; // $NON-NLS-1$
+    private static final String FILEPATH = "File path"; // $NON-NLS-1$
+    private static final String OFFSET = "Read offset"; //$NON-NLS-1$
+    private static final String READLENGTH = "Read length"; //$NON-NLS-1$
 
     /** The parameter name column title of file table. */
     //private static final String PARAMNAME = "send_file_param_name_label"; //$NON-NLS-1$

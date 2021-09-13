@@ -144,9 +144,11 @@ public class GRPCSamplerGui extends AbstractSamplerGui {
         mainPanel.add(getWebServerPanel());
         mainPanel.add(getGRPCRequestPanel());
         mainPanel.add(getOptionConfigPanel());
-        mainPanel.add(getRequestJSONPanel());
+        JTabbedPane requestPane = new JTabbedPane();
+        requestPane.add("JSON", getRequestJSONPanel());
         byteFieldsPanel = new GRPCBytesFieldsPanel();
-        mainPanel.add(byteFieldsPanel);
+        requestPane.add("Bytes Fields", byteFieldsPanel);
+        mainPanel.add(requestPane);
         add(mainPanel, BorderLayout.CENTER);
     }
 
